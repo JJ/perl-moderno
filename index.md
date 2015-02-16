@@ -34,7 +34,36 @@ Hay decenas de lenguajes hoy en día.
 
 >Menuda tontería. Siempre los ha habido.
 
-Vale, ahora hay más. Ayer mismo vi uno nuevo del que no había oído hablar nunca, [Nim](http://nim-lang.org/), un lenguaje estupendo, compilado, rápido y nuevo. Lo nuevo siempre es mejor y Perl [nació en el año 1987](http://history.perl.org/PerlTimeline.html), más o menos cuando todavía se daba esgrima en el instituto y el WhatsApp se hacía a base de pulsaciones de telégrafo, ¿no?. Mi historia personal con el Perl empieza en el año 93, más o menos, cuando lo aprendí... no recuerdo por qué. Porque me gusta aprender cosas. Pero también porque era un lenguaje *interpretado* que permite hacer cosas rápidamente. Antes, con el Pascal o el C, era editar el programa, compilar, vaya, aquí hay un error, compilamos de nuevo, ejecutamos, vaya, otro error, vamos a depurar y así sucesivamente... Perl es *interpretado*. Los programas en Perl son *scripts* o guiones que se pueden ejecutar directamente en cualquier sitio que haya un intérprete de Perl.
+Vale, ahora hay más. Ayer mismo vi uno nuevo del que no había oído
+hablar nunca, [Nim](http://nim-lang.org/), un lenguaje estupendo,
+compilado, rápido y nuevo. Lo nuevo siempre es mejor y Perl
+[nació en el año 1987](http://history.perl.org/PerlTimeline.html), más
+o menos cuando todavía se daba esgrima en el instituto y el WhatsApp
+se hacía a base de pulsaciones de telégrafo, ¿no?. Mi historia
+personal con el Perl empieza en el año 93, más o menos, cuando lo
+aprendí... no recuerdo por qué. Porque me gusta aprender cosas. Pero
+también porque era un lenguaje *interpretado* que permite hacer cosas
+rápidamente. Antes, con el Pascal o el C, era editar el programa,
+compilar, vaya, aquí hay un error, compilamos de nuevo, ejecutamos,
+vaya, otro error, vamos a depurar y así sucesivamente... Perl es
+*interpretado*. Los programas en Perl son *scripts* o guiones que se
+pueden ejecutar directamente en cualquier sitio que haya un intérprete
+de Perl. El que sea interpretado explica la primera línea del programa
+anterior:
+
+	#!/usr/bin/env perl
+
+que es la clásica de los lenguajes interpretados y que carga el primer
+intérprete de Perl en el camino de ejecución y, a continuación, usando
+ese intérprete, lee el resto del fichero y lo ejecuta usándolo. El
+poner esto en vez de directamente el camino a *un* intérprete nos
+permite que se pueda ejecutar en cualquier ordenador,
+independientemente de dónde se instale Perl y también el uso de
+intérpretes gestionados por el usuario.
+
+>Que es, de hecho, la principal razón para usar este tipo de
+>invocación al binario de Perl. 
+	
 
 Y hay intérpretes de Perl en todos los sistemas operativos y en cosas que no lo son, como Windows. En la mayoría de las distribuciones de Linux está ya instalado, porque parte de las herramientas del sistema están escritas usándolo. El paquete [`perl-base` de Ubuntu se lista como *essential*](http://packages.ubuntu.com/trusty/perl-base), así que en estas y distribuciones similares no tienes que preocuparte por su presencia. Escribe
 
@@ -68,4 +97,9 @@ web, incluyendo servicios web, procesamiento de datos masivos usando
 *scraping* (o extracción de datos semiestructurados) y, en general,
 cualquier cosa, hasta
 [algoritmos evolutivos](http://es.tldp.org/Presentaciones/200211hispalinux/merelo/ae-hispalinux2002.html)
-o cualquier otro tema de investigación.  
+o cualquier otro tema de investigación.
+
+>El hecho de que sea interpretado hace que su velocidad *de ejecución*
+>no sea óptima. Pero lo compensa con creces con la velocidad de
+>creación de nuevas aplicaciones.
+
