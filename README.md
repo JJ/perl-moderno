@@ -1,7 +1,3 @@
----
-layout: index
----
-
 # Un tutorial más de Perl
 
 ## Objetivos
