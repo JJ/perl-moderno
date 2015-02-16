@@ -2,6 +2,8 @@
    v2.0 | 20110126
    License: none (public domain)
 */
+@import url(http://fonts.googleapis.com/css?family=Share+Tech+Mono);
+@import url(http://fonts.googleapis.com/css?family=Dosis);
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -48,8 +50,8 @@ table {
 
 /* LAYOUT STYLES */
 body {
-  font-family: 'Helvetica Neue', Helvetica, Arial, serif;
-  font-size: 1em;
+  font-family: Dosis,'Helvetica Neue', Helvetica, Arial, serif;
+  font-size: 1.2em;
   line-height: 1.5;
   color: #6d6d6d;
   text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8);
@@ -167,9 +169,10 @@ a.button span {
 
 code, pre {
   margin-bottom: 30px;
-  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
-  font-size: 14px;
+  font-family: 'Share Tech Mono', Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
+  font-size: 1.5em;
   color: #222;
+  border-radius: 10px;          
 }
 
 code {
@@ -179,18 +182,22 @@ code {
 }
 
 pre {
-  padding: 20px;
-  overflow: auto;
-  color: #f2f2f2;
-  text-shadow: none;
-  background: #303030;
+      position: relative;
+      width:150%;
+      left:-25%;
+      padding: 20px;
+      overflow: auto;
+      color: #f2f2f2;
+      text-shadow: none;
+      background: #303030;
 }
+
 pre code {
-  padding: 0;
-  color: #f2f2f2;
-  background-color: #303030;
-  border: none;
-}
+           padding: 0;
+           color: #f2f2f2;
+           background-color: #303030;
+           border: none;
+           }
 
 ul, ol, dl {
   margin-bottom: 20px;
