@@ -77,18 +77,18 @@ y te dirá el camino en el que está instalado o
 
 para la versión que tienes, algo así:
 
-```
-This is perl 5, version 20, subversion 0 (v5.20.0) built for x86_64-linux
 
-Copyright 1987-2014, Larry Wall
+	This is perl 5, version 20, subversion 0 (v5.20.0) built for x86_64-linux
 
-Perl may be copied only under the terms of either the Artistic License or the
-GNU General Public License, which may be found in the Perl 5 source kit.
+	Copyright 1987-2014, Larry Wall
 
-Complete documentation for Perl, including FAQ lists, should be found on
-this system using "man perl" or "perldoc perl".  If you have access to the
-Internet, point your browser at http://www.perl.org/, the Perl Home Page.
-```
+	Perl may be copied only under the terms of either the Artistic License or the
+	GNU General Public License, which may be found in the Perl 5 source kit.
+
+	Complete documentation for Perl, including FAQ lists, should be found on
+	this system using "man perl" or "perldoc perl".  If you have access to the
+	Internet, point your browser at http://www.perl.org/, the Perl Home Page.
+
 
 El hecho de que esté instalado en todos los Linux (y en el Mac, que por debajo es lo mismo) lo hace útil para llevar a cabo cualquier labor relacionada con el sistema, como procesar un fichero de registro, monitorizar un proceso a ver qué está haciendo o simplemente realizar copias de seguridad periódicas. Casi ningún lenguaje (salvo el *shell*, pero no es un lenguaje) está disponible de esa forma en todos los sistemas operativos.
 
@@ -134,20 +134,20 @@ estable, con
 
 tras listar las disponibles con
 
-```
-perlbrew available
-  perl-5.20.2
-i perl-5.18.4
-  perl-5.16.3
-  perl-5.14.4
-  perl-5.12.5
-  perl-5.10.1
-  perl-5.8.9
-  perl-5.6.2
-  perl5.005_04
-  perl5.004_05
-  perl5.003_07
-```
+
+	perlbrew available
+	  perl-5.20.2
+	i perl-5.18.4
+	  perl-5.16.3
+	  perl-5.14.4
+	  perl-5.12.5
+	  perl-5.10.1
+	  perl-5.8.9
+	  perl-5.6.2
+	  perl5.005_04
+	  perl5.004_05
+	  perl5.003_07
+
 
 `i` indica la que está instalada en un momento determinado. Tras la
 instalación, que tarda un rato porque hay que descargar, compilar y
@@ -158,24 +158,24 @@ probarla, se usa con
 La orden anterior no lista las versiones de desarrollo (las
 impares). Para verlas hay que usar
 
-```
- perlbrew available --all
-  perl-5.6.0
-  perl-5.6.1-TRIAL1
-  perl-5.6.1-TRIAL2
-  perl-5.6.1-TRIAL3
-...
-  perl-5.20.1
-  perl-5.20.2-RC1
-  perl-5.20.2
-  perl-5.21.0
-  perl-5.21.1
-  perl-5.21.2
-  perl-5.21.4
-i perl-5.21.5
-  perl-5.21.6
-  perl-5.21.7
-```
+
+	 perlbrew available --all
+	  perl-5.6.0
+	  perl-5.6.1-TRIAL1
+	  perl-5.6.1-TRIAL2
+	  perl-5.6.1-TRIAL3
+	...
+	  perl-5.20.1
+	  perl-5.20.2-RC1
+	  perl-5.20.2
+	  perl-5.21.0
+	  perl-5.21.1
+	  perl-5.21.2
+	  perl-5.21.4
+	i perl-5.21.5
+	  perl-5.21.6
+	  perl-5.21.7
+
 
 Si se quieren ir probando las nuevas características conviene tener
 siempre instalada alguna de las versiones nuevas, como la `5.21.5` que
@@ -188,22 +188,22 @@ ejecución y se ejecuta directamente si los *scripts* llevan la línea
 `/usr/bin/env perl` al principio. Pero también podemos, desde
 `perlbrew` ejecutar directamente un programa
 
-```
-perlbrew exec perl -e 'print "Soy el proceso $$\n";'
-perl-5.18.4
-==========
-Soy el proceso 30893
+
+	perlbrew exec perl -e 'print "Soy el proceso $$\n";'
+	perl-5.18.4
+	==========
+	Soy el proceso 30893
 
 
-perl-5.20.0
-==========
-Soy el proceso 30894
+	perl-5.20.0
+	==========
+	Soy el proceso 30894
 
 
-perl-5.21.5
-==========
-Soy el proceso 30895
-```
+	perl-5.21.5
+	==========
+	Soy el proceso 30895
+
 
 En las tres versiones que hay instaladas en mi sistema, se ejecuta el
 programa mostrando el número de proceso, que se puede ver en Perl
