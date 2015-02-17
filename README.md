@@ -315,3 +315,19 @@ Pero volvamos a mirarlo:
 	say "Hola k ase";
 {% endhighlight %}
 
+El módulo `Modern::Perl` tiene `::` en medio para separar sus dos
+partes; este símbolo se usa para crear *espacios de nombres*, es
+decir, formas de separar identificadores con el mismo nombre para que
+puedan usarse sin ningún problema. `Perl` se usa también en el módulo
+[`Acme::Very::Modern::Perl`](http://search.cpan.org/~fwie/Acme-Very-Modern-Perl-0.05/lib/Acme/Very/Modern/Perl.pm)
+que, estando en el espacio de nombres `Acme`, sabemos que no tiene que
+tomarse muy en serio. También
+[`uni::perl`](http://search.cpan.org/~mons/uni-perl-0.92/). Cada uno
+usa un espacio de nombres diferente (o muchos); los espacios de
+nombres equivalen a subdirectorios en el directorio donde se instalan
+todos los módulos de Perl, así que `Modern::Perl` estaría en
+`lib/Modern/Perl.pm`, `.pm` es la extensión habitual de los módulos en
+Perl.
+
+
+
