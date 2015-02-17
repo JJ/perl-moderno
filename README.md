@@ -12,7 +12,7 @@
 
 Nuestro primer programa en Perl es el siguiente:
 
-{% highlight ruby %}
+{% highlight perl %}
 #!/usr/bin/env perl
 
 use Modern::Perl '2014';
@@ -267,8 +267,51 @@ también `perldoc` y puedes consultar
 Cuando todo falle, mira la documentación. Con Perl al menos lo tienes
 todo a mano.
 
-## También las librerías o módulos.
+## También las bibliotecas o módulos.
+
+Perl no fue el primero en crear un sistema universal de acceso e
+instalación de módulos (bibliotecas), porque fue el CTAN de LaTeX,
+pero sí el primero en hacerlo en un lenguaje de programación. Todos
+los demás lenguajes lo hicieron después y algunos (como Java) todavía
+están por
+hacerlo. [CPAN, o Comprehensive Perl Archive Network](http://search.cpan.org/)
+
+>Obsérvese el juego de palabras con CTAN, en el que está inspirado.
+
+es el lugar donde se pueden buscar la mayoría de los módulos de Perl y
+se pueden descargar, criticar, informar de errores o incluso hacer
+reseñas. Sin embargo, la verdadera utilidad de CPAN está en el cliente
+`cpan`, un programa que se instala con Perl y que descarga e instala
+los módulos junto con sus dependencias. De hecho, es más usado hoy en
+dia `cpanminus`, que también actúa como cliente de CPAN, pero que
+tiene menos opciones de instalación; de hecho ninguna. Como ya estamos
+trabajando con `perlbrew`, lo instalamos con
+
+	 perlbrew install-cpanm
+
+y, para ejecutarlo para instalar la biblioteca que usamos en nuestro
+"Hola mundo", `Modern::Perl`, la usamos así:
+
+	cpanm Modern::Perl      
+	--> Working on Modern::Perl
+	Fetching http://www.cpan.org/authors/id/C/CH/CHROMATIC/Modern-Perl-1.20150127.tar.gz ... OK
+	==> Found dependencies: Module::Build
+	...
+
+Que, como se ve, instala el módulo `Modern::Perl` y todas las
+dependencias (la primera, `Module::Build`, se ve ya en esta
+captura). Con esto ya podemos ejecutar nuestro programa:
+
+	perl code/holakase.pl 
+	Hola k ase
 
 
+Pero volvamos a mirarlo:
 
- 
+{% highlight perl %}
+	use Modern::Perl '2014';
+	use autodie;
+
+	say "Hola k ase";
+{% endhighlight %}
+
