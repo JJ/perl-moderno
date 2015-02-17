@@ -369,6 +369,89 @@ hace este primer programa, que en realidad podíamos haber hecho así
 
 pero no habríamos aprendido tanto, ¿no?
 
+##Tratando información con Perl
+
+En Perl, siempre hay más de una forma de hacer las cosas. Como
+lenguaje expresivo que es, se pueden usar bucles tal como se haría en
+C, por ejemplo, con variable de bucle y demás. Pero hay formas de
+tratar la información modernas que son mucho más Perleras, como
+hacemos en el siguiente [programa](code/trafico-gr-ep.pl):
+
+
+{% highlight perl %}
+use LWP::Simple;
+use Mojo::DOM;
+
+my $url = "http://www.europapress.es/trafico/";
+
+my $dom = Mojo::DOM->new( get $url );
+
+my $estados_granada = $dom->find("table#tblTrafico tr")->grep(qr/Granada/i);
+
+for my $estado (@$estados_granada ) {
+  say "-> "
+    , $estado->at("td.lugar")->text
+    , " - ".$estado->find("td img")->map(attr =>'alt')->join(" | " );
+}
+
+{% endhighlight %}
+
+Hemos suprimido las 5 primeras líneas, que son iguales que en el
+primer programa (incluyendo el *shebang*, `#!"), este programa que
+descarga una web, la de
+[tráfico de la agencia Europa Press](http://www.europapress.es/trafico/)
+y extrae todas las incidencias referidas a la provincia de Granada,
+ocupa un total de siete líneas, bueno, 18 si las extendemso para ser
+más legibles. Por supuesto, esas 7 líneas resumen lo mejor y lo peor
+del Perl, así que iremos por partes en las mismas.
+
+El programa usa dos bibliotecas: una para descargar la página web y
+otra para analizarla. La primera es
+[`LWP::Simple`](http://search.cpan.org/~ether/libwww-perl-6.13/lib/LWP/Simple.pm),
+un cliente web que incluye sólo funciones, como `get`, para descargarse
+un URL y meter el contenido en la variable. El segundo es
+[`Mojo::DOM`](http://mojolicio.us/perldoc/Mojo/DOM), parte de
+[Mojolicious](http://mojolicio.us), un marco MVC que también incluye
+todo tipo de utilidades, como esta, para crear aplicaciones
+cliente-servidor, testearlas y hacer miles de cosas con ellas; este
+módulo, por ejemplo, analiza un documento y permite acceder a partes
+del mismo usando selectores CSS tal como hace JQuery.
+
+Por eso es tan fácil procesar ese tipo de información. Esos módulos se
+incluyen en las dos primeras líneas y el segundo bloque declara dos
+variables.
+
+	my $url = "http://www.europapress.es/trafico/";
+
+declara el ámbito de la variable `$url`. Una declaración de ámbito no
+es una declaración de variable: la variable se puede usar sin
+necesidad de declarar su ámbito, pero en Perl *moderno* conviene
+declarar el ámbito de todas las variables para saber dónde están y se
+mueven. En este caso es el ámbito global, pero es una buena práctica
+que hay que usar, literalmente, en todos los ámbitos. La segunda
+declaración
+
+	my $dom = Mojo::DOM->new( get $url );
+
+es de un objeto: se crea un `new` objeto de tipo `Mojo::DOM` a partir
+de una cadena, la que devuelve `get $url`. En una sola línea
+descargamos el URL y lo analizamos, creando una variable, `$dom` que
+lo contiene ya dividido en diferentes bloques que se pueden analizar.
+
+Las variables en Perl no tienen tipo, o mejor dicho, tienen
+tipificación dinámica: usa
+["duck typing"](http://es.wikipedia.org/wiki/Duck_typing) que consiste
+en usar una variable como el comportamiento requiera en cada
+momento. `$url` se comportará como una cadena si la usamos en el
+contexto de otras cadenas, pero como un número en contexto numérico.
+
+	my $uno = "1uno";
+	my $dos = "2dos";
+	say length($uno);
+	say $uno + $dos;
+
+En el caso anterior, `length`
+
 
 
 
