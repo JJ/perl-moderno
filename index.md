@@ -333,5 +333,42 @@ todos los módulos de Perl, así que `Modern::Perl` estaría en
 `lib/Modern/Perl.pm`, `.pm` es la extensión habitual de los módulos en
 Perl.
 
+En Perl funciona la importación de módulos exactamente igual que en
+cualquier otro lenguaje, sólo que de forma totalmente diferente. Como
+en cualquier otro lenguaje, se importan identificadores y funciones
+que podemos usar directamente en nuestro programa. Pero también se
+pueden pasar parámetros a esa importación que cambian como se comporta
+la misma: pueden importarse algunas cosas y no otras, o, como en este
+caso, importarse cosas diferentes. En concreto, '2014' hace que Perl
+se comporte como las versiones que hay salido en 2014, es decir,
+la 5.20 (y posteriores). Los módulos en Perl son algo más que
+variables y funciones: son *pragmas* o *interruptores* que regulan el
+comportamiento del programa en tiempo de compilación. Precisamente la
+línea siguiente `use autodie` es una pragma, que indica que el
+programa *muera automáticamente* (es decir, use la orden `die`) si
+sucede algún error que impide que el programa siga adelante: no poder
+abrir el fichero con el que se trabaja, por ejemplo. Estas dos órdenes
+preceden a todos los programas en el libro
+[Perl moderno](http://onyxneon.com/books/modern_perl/), que, como es
+natural, es la inspiración para esta introducción al lenguaje.
+
+Pero no hemos tenido que instalar `autodie`, no es que no recuerdes
+haberlo hecho, es que es una pragma que está activada por
+defecto. `use` sirve tanto para cargar bibliotecas como para activar
+pragmas. La verdad es que en este caso la pragma es bastante inútil,
+pero la librería nos permite usar la siguiente línea, que es la que
+realmente hace algo:
+
+	say "Hola k ase";
+
+`say` es la nueva forma de decir `print` incluyendo un retorno de
+carro al final, pasando a la línea siguiente. Y esto es todo lo que
+hace este primer programa, que en realidad podíamos haber hecho así
+
+	perl -e "print 'Hola k ase\n'";
+
+pero no habríamos aprendido tanto, ¿no?
+
+
 
 
