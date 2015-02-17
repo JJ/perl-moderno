@@ -210,4 +210,65 @@ programa mostrando el número de proceso, que se puede ver en Perl
 desde la variable `$$`. Es una de las variables *especiales* de Perl,
 pero tiene la sintaxis de otras variables: comienza con un `$`. El
 ejecutar un programa desde todas las versiones puede servir para
-probar su compatibilidad con las mismas o su velocidad. 
+probar su compatibilidad con las mismas o su velocidad.
+
+También se muestra cómo se puede ejecutar algo directamente desde la
+línea de órdenes, un *one-liner* de los que han hecho famoso a
+Perl. El argumento o *switch* `-e` ejecuta como un programa en Perl lo
+que se encuentra justamente detrás. Por las buenas.
+
+Tampoco hacen falta paréntesis: Perl es expresivo y está hecho para el
+programador perezoso. Si hay una cadena (delimitada por comillas)
+detrás de una orden, pues será el argumento de esa orden. No hay que
+darle más vueltas.
+
+> Puede haber cierta ambigüedad. La coma es a la vez un separador de
+> cadenas y un
+> [operador](http://perldoc.perl.org/perlop.html#Comma-Operator) que
+> evalúa su lado izquierdo, tira el valor resultante, evalúa el
+> derecho e imprime el resultado. Por lo que
+
+	perl -e "print 2*2,print 3*4;"
+
+> evaluará el lado derecho, lo que tendrá como valor resultante un 4,
+> luego evaluará el izquierdo y ejecutará `print` y finalmente
+> devolverá el resultado, resultando en, obviamente, 1241. Vale, yo
+> tampoco lo entiendo, pero lo anterior te muestra cómo la sintaxis de
+> Perl es suficientemente flexible para que hagas lo que quieras
+> incluso aunque no sepas lo que haces.
+
+La documentación de Perl está bien estructurada y todo lo anterior
+puedes leerlo en diferentes apartados de la misma. Se accede a la
+documentación con `perldoc`, que puede, o no, estar instalado en el
+sistema. En algunas versiones de Ubuntu y Debian está, pero en otras
+no. Así que, ante la duda, se instala
+
+	sudo apt-get install perl-doc
+
+aunque si tienes instalado `perlbrew` por el mismo precio tienes
+también `perldoc` y puedes consultar
+
+* `perldoc perlvar` para ver todas las variables que tiene Perl
+  definidas, incluyendo `$$`.
+
+* `perldoc perlrun` sobre cómo llamar a Perl, incluyendo la opción
+  `-e` que ejecuta un programa sobre la marcha.
+
+* `perldoc -f print` que te consulta una orden determinada, la única
+  (o casi) que hemos visto hasta el momento, `print`.
+
+* `perldoc perlop` para saber todos los operadores que hay en Perl,
+  incluyendo la coma, que es un operador de pleno derecho.
+
+* `perldoc perl` que, aparte de una introducción general, incluye una
+  lista de toda la documentación que se instala y de cómo acceder al
+  resto de las opciones.
+
+Cuando todo falle, mira la documentación. Con Perl al menos lo tienes
+todo a mano.
+
+## También las librerías o módulos.
+
+
+
+ 
