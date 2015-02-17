@@ -309,10 +309,10 @@ captura). Con esto ya podemos ejecutar nuestro programa:
 Pero volvamos a mirarlo:
 
 {% highlight perl %}
-	use Modern::Perl '2014';
-	use autodie;
+use Modern::Perl '2014';
+use autodie;
 
-	say "Hola k ase";
+say "Hola k ase";
 {% endhighlight %}
 
 El módulo `Modern::Perl` tiene `::` en medio para separar sus dos
