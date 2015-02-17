@@ -16,7 +16,7 @@ layout: index
 
 Nuestro primer programa en Perl es el siguiente:
 
-{% highlight ruby %}
+{% highlight perl %}
 #!/usr/bin/env perl
 
 use Modern::Perl '2014';
@@ -214,4 +214,124 @@ programa mostrando el número de proceso, que se puede ver en Perl
 desde la variable `$$`. Es una de las variables *especiales* de Perl,
 pero tiene la sintaxis de otras variables: comienza con un `$`. El
 ejecutar un programa desde todas las versiones puede servir para
-probar su compatibilidad con las mismas o su velocidad. 
+probar su compatibilidad con las mismas o su velocidad.
+
+También se muestra cómo se puede ejecutar algo directamente desde la
+línea de órdenes, un *one-liner* de los que han hecho famoso a
+Perl. El argumento o *switch* `-e` ejecuta como un programa en Perl lo
+que se encuentra justamente detrás. Por las buenas.
+
+Tampoco hacen falta paréntesis: Perl es expresivo y está hecho para el
+programador perezoso. Si hay una cadena (delimitada por comillas)
+detrás de una orden, pues será el argumento de esa orden. No hay que
+darle más vueltas.
+
+> Puede haber cierta ambigüedad. La coma es a la vez un separador de
+> cadenas y un
+> [operador](http://perldoc.perl.org/perlop.html#Comma-Operator) que
+> evalúa su lado izquierdo, tira el valor resultante, evalúa el
+> derecho e imprime el resultado. Por lo que
+
+	perl -e "print 2*2,print 3*4;"
+
+> evaluará el lado derecho, lo que tendrá como valor resultante un 4,
+> luego evaluará el izquierdo y ejecutará `print` y finalmente
+> devolverá el resultado, resultando en, obviamente, 1241. Vale, yo
+> tampoco lo entiendo, pero lo anterior te muestra cómo la sintaxis de
+> Perl es suficientemente flexible para que hagas lo que quieras
+> incluso aunque no sepas lo que haces.
+
+La documentación de Perl está bien estructurada y todo lo anterior
+puedes leerlo en diferentes apartados de la misma. Se accede a la
+documentación con `perldoc`, que puede, o no, estar instalado en el
+sistema. En algunas versiones de Ubuntu y Debian está, pero en otras
+no. Así que, ante la duda, se instala
+
+	sudo apt-get install perl-doc
+
+aunque si tienes instalado `perlbrew` por el mismo precio tienes
+también `perldoc` y puedes consultar
+
+* `perldoc perlvar` para ver todas las variables que tiene Perl
+  definidas, incluyendo `$$`.
+
+* `perldoc perlrun` sobre cómo llamar a Perl, incluyendo la opción
+  `-e` que ejecuta un programa sobre la marcha.
+
+* `perldoc -f print` que te consulta una orden determinada, la única
+  (o casi) que hemos visto hasta el momento, `print`.
+
+* `perldoc perlop` para saber todos los operadores que hay en Perl,
+  incluyendo la coma, que es un operador de pleno derecho.
+
+* `perldoc perl` que, aparte de una introducción general, incluye una
+  lista de toda la documentación que se instala y de cómo acceder al
+  resto de las opciones.
+
+Cuando todo falle, mira la documentación. Con Perl al menos lo tienes
+todo a mano.
+
+## También las bibliotecas o módulos.
+
+Perl no fue el primero en crear un sistema universal de acceso e
+instalación de módulos (bibliotecas), porque fue el CTAN de LaTeX,
+pero sí el primero en hacerlo en un lenguaje de programación. Todos
+los demás lenguajes lo hicieron después y algunos (como Java) todavía
+están por
+hacerlo. [CPAN, o Comprehensive Perl Archive Network](http://search.cpan.org/)
+
+>Obsérvese el juego de palabras con CTAN, en el que está inspirado.
+
+es el lugar donde se pueden buscar la mayoría de los módulos de Perl y
+se pueden descargar, criticar, informar de errores o incluso hacer
+reseñas. Sin embargo, la verdadera utilidad de CPAN está en el cliente
+`cpan`, un programa que se instala con Perl y que descarga e instala
+los módulos junto con sus dependencias. De hecho, es más usado hoy en
+dia `cpanminus`, que también actúa como cliente de CPAN, pero que
+tiene menos opciones de instalación; de hecho ninguna. Como ya estamos
+trabajando con `perlbrew`, lo instalamos con
+
+	 perlbrew install-cpanm
+
+y, para ejecutarlo para instalar la biblioteca que usamos en nuestro
+"Hola mundo", `Modern::Perl`, la usamos así:
+
+	cpanm Modern::Perl      
+	--> Working on Modern::Perl
+	Fetching http://www.cpan.org/authors/id/C/CH/CHROMATIC/Modern-Perl-1.20150127.tar.gz ... OK
+	==> Found dependencies: Module::Build
+	...
+
+Que, como se ve, instala el módulo `Modern::Perl` y todas las
+dependencias (la primera, `Module::Build`, se ve ya en esta
+captura). Con esto ya podemos ejecutar nuestro programa:
+
+	perl code/holakase.pl 
+	Hola k ase
+
+
+Pero volvamos a mirarlo:
+
+{% highlight perl %}
+	use Modern::Perl '2014';
+	use autodie;
+
+	say "Hola k ase";
+{% endhighlight %}
+
+El módulo `Modern::Perl` tiene `::` en medio para separar sus dos
+partes; este símbolo se usa para crear *espacios de nombres*, es
+decir, formas de separar identificadores con el mismo nombre para que
+puedan usarse sin ningún problema. `Perl` se usa también en el módulo
+[`Acme::Very::Modern::Perl`](http://search.cpan.org/~fwie/Acme-Very-Modern-Perl-0.05/lib/Acme/Very/Modern/Perl.pm)
+que, estando en el espacio de nombres `Acme`, sabemos que no tiene que
+tomarse muy en serio. También
+[`uni::perl`](http://search.cpan.org/~mons/uni-perl-0.92/). Cada uno
+usa un espacio de nombres diferente (o muchos); los espacios de
+nombres equivalen a subdirectorios en el directorio donde se instalan
+todos los módulos de Perl, así que `Modern::Perl` estaría en
+`lib/Modern/Perl.pm`, `.pm` es la extensión habitual de los módulos en
+Perl.
+
+
+
