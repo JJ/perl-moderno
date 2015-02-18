@@ -555,3 +555,35 @@ así:
 
 ## Usando formatos estándar.
 
+Pero con el texto no llegamos a ningún lado. Habrá que usar algún
+formato estándar para que se pueda tratar de forma eficiente. Usemos,
+por ejemplo, JSON para sacarlo en el siguiente programa
+
+{% highlight perl %}
+use Modern::Perl;
+use autodie;
+
+use LWP::Simple;
+use Mojo::DOM;
+use JSON;
+
+my $url = "http://www.europapress.es/trafico/";
+
+my $dom = Mojo::DOM->new( get $url );
+
+my $estados_granada = $dom->find("table#tblTrafico tr")->grep(qr/Granada/i);
+
+my %estados;
+for my $estado (@$estados_granada ) {
+    push @{$estados{$estado->at("td.lugar")->text}}
+    , [$estado->at("td.fecha_tr")->text
+       , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string];
+}
+say encode_json \%estados;
+
+{% endhighlight %}
+
+El programa tiene pequeños cambios con respecto al anterior. Pero
+añade otro módulo, `JSON`, que habría que instalar a mano. Cada vez
+que descarguemos [el programa](code/trafico-gr-ep-json.pl) en un nuevo
+ordenador, tendremos que instalar uno a uno todos los ficheros. 
