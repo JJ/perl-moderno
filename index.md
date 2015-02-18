@@ -740,4 +740,46 @@ para recuperar el valor correspondiente, definido en el fichero.
 >salen letras raras por conversión de conjunto doe caracteres, no hay
 >que preocuparse por lo pronto
 
-Pero ¿qué ocurre si no hay ninguna incidencia? 
+Pero ¿qué ocurre si no hay ninguna incidencia para esa ciudad? Se
+devuelve un estado 404, es decir, no encontrado, con `return status
+404;`. La última línea del fichero, `start`, es la que efectivamente
+arranca el servidor, escribiendo algo así:
+
+	>> Dancer2 v0.158000 server 13032 listening on http://0.0.0.0:3000
+
+Este programa lo puedes desplegar en un servidor propio o en un
+[PaaS tal como OpenShift](https://github.com/openshift-quickstart/dancer-example),
+de forma totalmente gratuita (para un uso moderado de
+recursos). También se puede desplegar en
+[heroku con algo más de complicación](http://stackoverflow.com/questions/23208153/dancer-app-on-heroku-failing-to-deploy-because-cpanm-installation)
+o, previo pago, en
+[dotCloud](https://docs.dotcloud.com/services/perl/). También puedes
+usar nubes privadas como el propio OpenShift o
+[Stackato](http://www.activestate.com/stackato2?utm_expid=38623772-5.6s96DopbSuSFejrYBARncw.1&utm_referrer=http%3A%2F%2Fwww.tomsitpro.com%2Farticles%2Fopen-source-cloud-computing-software%2C2-754-6.html),
+creado por la misma compañía que porta Perl a Windows.
+
+En resumen y en pocas líneas de código se puede crear una aplicación
+útil y rápida, que libere al programador para hacer otras cosas más
+interesantes como ver una temporada completa de Breaking Bad.
+
+## A donde ir desde aquí
+
+Perl tiene una comunidad extensa y entusiasta, en castellano o en
+cualquier otro idioma. En Granada el
+[Grupo de usuarios de Perl](https://groups.google.com/forum/#!members/gup-ugr)
+tiene básicamente una lista de correo, pero también organiza saraos
+importantes como la
+[Conferencia europea de Perl](http://act.yapc.eu). [Madrid](http://madrid.pm.org/) y
+[Barcelona](http://barcelona.pm) tienen un grupo bastante activo de
+usuarios y organizan reuniones periódicas (más los de Madrid que los
+de Barcelona).
+
+Para cualquier duda, el canal de IRC ,
+[Perl Monks](http://perlmonks.org) o, por supuesto, StackOverflow son
+lugares fundamentales. Difícil que una pregunta se quede sin
+contestar. Aparte del Modern Perl mencionado, hay todo tipo de libros
+a todos los niveles, desde uso de expresiones regulares hasta libros
+de hacks o de recetas. Y, por supuesto, el autor puede echar una mano
+en lo que haga falta.
+
+
