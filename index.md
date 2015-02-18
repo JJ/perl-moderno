@@ -436,7 +436,11 @@ declaración
 es de un objeto: se crea un `new` objeto de tipo `Mojo::DOM` a partir
 de una cadena, la que devuelve `get $url`. En una sola línea
 descargamos el URL y lo analizamos, creando una variable, `$dom` que
-lo contiene ya dividido en diferentes bloques que se pueden analizar.
+lo contiene ya dividido en diferentes bloques que se pueden
+analizar. La flecha se usa para acceder a métodos de una clase, porque
+Perl *también* es orientado a objetos.
+
+>O algo por el estilo.
 
 Las variables en Perl no tienen tipo, o mejor dicho, tienen
 tipificación dinámica: usa
@@ -450,7 +454,10 @@ contexto de otras cadenas, pero como un número en contexto numérico.
 	say length($uno);
 	say $uno + $dos;
 
-En el caso anterior, `length`
+En el caso anterior, `length` trata la variable como una cadena,
+considerando sus cuatro caracteres; sin embargo, `+` lo tratará como
+un número, devolviendo `3`. *Duck typing*: si actúa como un número,
+será un número.
 
 
 
