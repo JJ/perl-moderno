@@ -17,6 +17,6 @@ my %estados;
 for my $estado (@$estados_granada ) {
     push @{$estados{$estado->at("td.lugar")->text}}
     , [$estado->at("td.fecha_tr")->text
-       , $estado->find("td img")->map(attr =>'alt')->join(" | " )];
+       , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string];
 }
-say encode_json %estados;
+say encode_json \%estados;
