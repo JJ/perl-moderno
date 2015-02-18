@@ -455,6 +455,103 @@ considerando sus cuatro caracteres; sin embargo, `+` lo tratará como
 un número, devolviendo `3`. *Duck typing*: si actúa como un número,
 será un número.
 
+Pero hasta ahora estamos trabajando con estructuras *simples*,
+escalares. Todos los escalares tienen un `$` delante en Perl. Por lo
+tanto, la siguiente línea también declara el ámbito de un escalar:
 
+	my $estados_granada = $dom->find("table#tblTrafico tr")->grep(qr/Granada/i);
 
+lo que es, efectivamente, lo más simple que se puede decir sobre
+ella. En realidad se trata de una referencia a un *array*; los arrays
+o vectores usan `@` en Perl, pero en este caso la función a la derecha
+directamente devuelve una referencia, así que no aparecerá la arroba
+hasta más adelante.
+
+¿Y qué hace esa función? Perl sigue el principio de la mínima
+sorpresa, así que podemos intentar leerla aunque no lo conozcamos (y
+sepamos otras cosas, claro, como CSS y utilidades básicas de Unix). Lo
+que hace es que, dentro del fichero analizado, busca (`find`) las
+filas de las tablas que tengan el id `tblTrafico` y, entre ellas,
+selecciona (`grep`) aquellas en las que aparece la expresión regular
+(`qr`) Granada. Perl es expresivo y permite hacer todo eso en una sola
+línea. Además, hemos usado expresiones regulares: en este caso es una
+expresión regular `qr/Granada/i` que se suele expresar entre
+delimitadores tal como el slash y que, tras ellos, tiene una serie de
+modificadores: `i` que es *case **i**nsensitive*, por lo que buscará
+el nombre de nuestra provincia esté en mayúsculas o no.
+
+Las expresiones regulares son una de la aportación de Perl a los
+lenguajes de programación modernos. Fue el primer lenguaje que las
+introdujo de forma nativa
+
+>lenguaje de propósito general, claro; antes estaba el AWK
+
+y de ahí su sintaxis se ha extendido al resto de los lenguajes de
+programación; que ya lo incluyen de forma más o menos habitual. Aquí
+las usamos en su forma más simple, una simple cadena, pero se puede
+incluir cualquier tipo de estructura regular; por ejemplo `/\(.+\)/`
+incluiría todos los lugares que incluyeran un paréntesis, que podrían
+ser todos los que no fueran estrictamente la capital de la provincia,
+como La Zubia (Granada). Las `\` hacen que el paréntesis se interprete
+de forma literal, y `.+` indica uno o más caracteres, cualquiera que
+sea (espacio, letras, números, lo que sea).
+
+>Las expresiones regulares necesitarían cursos enteros para ser bien
+>comprendidas. Pero quedémonos con que son muy útiles y, a este nivel,
+>fáciles de usar.
+
+El array lo usamos a continuación en el bucle, cuya primera línea es:
+
+	for my $estado (@$estados_granada ) {
+
+En este caso estamos des-referenciando el *array*. Para desreferenciar
+se precede la variable con el *sigilo* que indica el tipo de destino,
+en este caso un *array* representado por `@`. En el bucle se declara
+una variable, `$estado`, que irá recorriendo uno por uno los elementos
+del *array*. Ese bucle puede usar también la forma habitual, con un
+índice sobre el *array*, pero esta forma es más *moderna* y se
+prefiere.
+
+Pero recuerda que en Perl siempre hay muchas formas de hacerlo. Por
+ejemplo
+
+	while (@$estados_granada) {
+		my $estado = shift @$estados_granada
+
+iría sacando elementos del *array* hasta que no quedaran más. Es
+cuestión de probar diferentes opciones a ver cuál puede ser más
+rápida.
+
+>Perl tiene un excelente profiler, `Devel::NYTProf`, desarrollado
+>originalmente en el New York Times. Ante la duda, usa el profiler.
+
+Dentro del bucle volvemos a usar las funciones de `Mojo::DOM` para
+extraer información de cada una de las filas de la tabla: el sitio
+donde están y el título de las imágenes de la segunda fila que es
+donde se contiene la información sobre el estado. Una vez más, en
+
+	$estado->find("td img")->map(attr =>'alt')->join(" | " )
+
+usamos bucles implícitos y también *hashes*, el otro tipo de arrays de
+Perl. `attr =>'alt'` es un hash que tiene como clave `attr` y como
+valor `alt`. Visto de izquierda a derecha, encuentra todas las
+imágenes contenidas en las celdas de la fila, de las que extrae el
+atributo `alt` y una vez extraídos todos los una usando una cadena.
+
+¿Cuál será el resultado? Variará con el día, pero en este momento algo
+así:
+
+	-> GRANADA - Obra | Circulación lenta con paradas esporádicas
+	-> SIERRA NEVADA - Retención | Circulación lenta con paradas esporádicas
+	-> GRANADA - Obra | Circulación lenta con paradas esporádicas
+	-> TREVELEZ - Retención | Circulación lenta con paradas esporádicas
+	-> PUEBLA DE DON FADRIQUE - Retención | Circulación lenta con paradas esporádicas
+	-> JUVILES - Retención | Circulación lenta con paradas esporádicas
+	-> CALAHORRA (LA) - Retención | Circulación lenta con paradas esporádicas
+	-> ZUBIA (LA) - Obra | Circulación lenta con paradas esporádicas
+	-> IZBOR - Retención | Circulación lenta con paradas esporádicas
+	-> PINOS - Obra | Circulación lenta con paradas esporádicas
+	-> GUADAHORTUNA - Obra | Circulación lenta con paradas esporádicas
+
+## Usando formatos estándar.
 
