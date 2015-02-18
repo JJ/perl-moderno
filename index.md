@@ -584,10 +584,160 @@ for my $estado (@$estados_granada ) {
        , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string];
 }
 say encode_json \%estados;
-
 {% endhighlight %}
 
 El programa tiene pequeños cambios con respecto al anterior. Pero
 añade otro módulo, `JSON`, que habría que instalar a mano. Cada vez
 que descarguemos [el programa](code/trafico-gr-ep-json.pl) en un nuevo
-ordenador, tendremos que instalar uno a uno todos los ficheros. 
+ordenador, tendremos que instalar uno a uno todos los módulos.
+
+Para ello, `cpanfile` al rescate:
+
+{% highlight perl %}
+requires 'Modern::Perl';
+requires 'LWP::Simple';
+requires 'Mojo::DOM';
+requires 'JSON';
+{% endhighlight %}
+
+`cpanfile` es simplemente un formato de fichero que especifica los
+módulos que se necesitan y, opcionalmene, la versión de los
+mismos. Por ejemplo, `requires 'Mojo::DOM', ">= 5.7";` instalará
+Mojo::DOM en esa versión si la que hay instalada es anterior. En
+nuestro caso nos da igual la versión, porque usamos el interfaz más
+común (al menos que sepamos), así que con ese fichero y ejecutando
+
+	cpanm --installdeps .
+
+nos instalará todos los módulos que necesitamos para ejecutar el
+programa. Que es muy similar al anterior, salvo que declaramos el hash
+`%estados` que usaremos para almacenar todos los datos relativos a una
+ciudad. El nombre de la ciudad será la clave, y como valor tendremos
+un *array* con todas las incidencias; cada una de las incidencias
+tendrá la fecha y de qué se trata. Para extraer el lugar se usa el
+mismo código que antes, pero
+
+	 [$estado->at("td.fecha_tr")->text
+       , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string]
+
+es un array de dos componentes. El primero es el texto de la fecha,
+que lo extraemos tal cual de la celda de la tabla correspondiente. El
+segundo componente es similar al que usábamos antes: extraemos el
+texto de las imágenes, pero añadiendo al final `to_string` lo
+convertimos a una cadena, lo que era necesario porque previamente se
+trataba de un objeto raruno cuyo tipo no viene al caso.
+
+Finalmente, lo escribimos en JSON, directamente a salida estándar (a
+pantalla):
+
+	say encode_json \%estados;
+
+Como `encode_json` necesita una referencia, la creamos a partir del
+hash usando `\`. El resultado será:
+
+	{"GRANADA":[["18/02/2015","Obra | Circulación lenta con paradas esporádicas"],["17/02/2015","Obra | Circulación lenta con paradas esporádicas"]],"PINOS":[["05/08/2013","Obra | Circulación lenta con paradas esporádicas"]],"CALAHORRA (LA)":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"IZBOR":[["07/11/2014","Retención | Circulación lenta con paradas esporádicas"]],"ZUBIA (LA)":[["30/01/2015","Obra | Circulación lenta con paradas esporádicas"]],"SIERRA NEVADA":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"TREVELEZ":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"GUADAHORTUNA":[["13/04/2009","Obra | Circulación lenta con paradas esporádicas"]],"JUVILES":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"PUEBLA DE DON FADRIQUE":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]]}
+
+Ya estamos listos para crea una aplicación web con este formato. Lo
+que haremos a continuación.
+
+## Uso de marcos web: Dancer
+
+[Dancer2](http://perldancer.org/) es, como Mojolicious, un marco de
+aplicaciones. Podíamos haber usado Mojolicious y nos habríamos quedado
+tan agusto, pero Dancer es más ligero y no requiere más que poner lo
+que uno necesita para crear una aplicación REST, que es lo que vamos a
+hacer: una aplicación que te devuelva, en formato JSON, las
+incidencias de un sitio determinado a partir del nombre de la
+ciudad. Lo hacemos en el [siguiente programa](code/trafico-gr-ep-dance.pl)
+
+{% highlight perl %}
+use File::Slurp::Tiny qw(read_file);
+use Dancer2 qw(:syntax);
+
+my $data_file = read_file('gr-trafico.json');
+
+my $data = from_json $data_file;
+
+get '/' => sub {
+    my @keys = keys %$data;
+    return to_json { ciudades => \@keys };
+};
+
+get '/trafico/:ciudad' => sub {
+    if ( $data->{params->{'ciudad'}} ) {
+	return to_json $data->{params->{'ciudad'}};
+    } else {
+	return 	status 404;
+    }
+};
+ 
+start;
+{% endhighlight %}
+
+(Quitamos las líneas iniciales). En una docena de líneas creamos una
+aplicación web completa. Usamos dos módulos: uno para leer ficheros
+que lo hace de forma más rápida a la habitual, *tragándoselos*
+(`Slurp`) y que nos simplifica el proceso de leer el fichero JSON, y
+`Dancer2`, el marco de aplicaciones que aquí usamos en su forma más
+simple; sin plantillas, sino simplemente definiendo una serie de
+*rutas* que se podrán usar desde una aplicación web en *jQuery*, por
+ejemplo, o desde un cliente de cualquier tipo.
+
+Tras leer el fichero y convertirlo a una estructura de datos interna,
+
+>lo más habitual sería que esto se hiciera desde una base de datos
+>como Redis, CouchDB o MongoDB, pero en este caso lo vamos a dejar en
+>el fichero. Perl, como es natural, trabaja con cualquiera de ellas.
+
+definimos las rutas. Ojo, que es una definición, no una orden que se
+ejecute directamente. Por eso lo que se le pasa es una *función
+anónima*,
+
+	'/' => sub {
+      my @keys = keys %$data;
+      return to_json { ciudades => \@keys };
+	};
+
+es un hash, con clave `/` y valor una función a la que se llamará
+cuando desde el cliente se requiera esa ruta. `sub` es la palabra
+clave que se usa para definir funciones en Perl, y normalmente lleva
+un nombre de función detrás (y últimamente también, los parámetros),
+pero en este caso no lleva nada, sino que *devuelve* un valor, en este
+caso un hash con clave `ciudades` y valor un *array* con los nombres
+posibles de las ciudades, convertido a JSON usando una función del
+propio Dancer2, `to_json`.
+
+El resultado será algo así:
+
+	curl http://0.0.0.0:3000
+	{"ciudades":10}
+
+Dancer, por defecto, ejecuta un servidor web en el puerto 3000; a este
+podemos acceder usando `curl` o desde el navegador (o desde un
+programa, claro). Es una ruta `get`, uno de las diversas órdenes que
+tiene HTTP. POST, PUT, el resto, se pueden definir de la misma forma
+*natural*, pero en nuestro caso usaremos sólo get. 
+
+La otra ruta usa un parámetro y permite acceder a los datos de la
+ciudad.
+
+	get '/trafico/:ciudad' => sub {
+		if ( $data->{params->{'ciudad'}} ) {
+		return to_json $data->{params->{'ciudad'}};
+		} else {
+			return status 404;
+		}
+	};
+
+El parámetro se le pasa con `:` y con lo mismo se le asigna un
+nombre. En realidad el funcionamiento interno es el mismo, salvo que
+recuperamos el valor del parámetro con `params` y lo usamos como clave
+para recuperar el valor correspondiente, definido en el fichero.
+
+	curl http://0.0.0.0:3000/trafico/GRANADA
+	[["18/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"],["17/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"]]%
+
+>salen letras raras por conversión de conjunto doe caracteres, no hay
+>que preocuparse por lo pronto
+
+Pero ¿qué ocurre si no hay ninguna incidencia? 
