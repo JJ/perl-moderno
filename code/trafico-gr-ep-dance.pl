@@ -19,8 +19,7 @@ get '/trafico/:ciudad' => sub {
     if ( $data->{params->{'ciudad'}} ) {
 	return to_json $data->{params->{'ciudad'}};
     } else {
-	status 404;
-	return halt;
+	return status 404;
     }
 };
  
