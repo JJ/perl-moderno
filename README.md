@@ -283,7 +283,7 @@ se pueden descargar, criticar, informar de errores o incluso hacer
 reseñas. Sin embargo, la verdadera utilidad de CPAN está en el cliente
 `cpan`, un programa que se instala con Perl y que descarga e instala
 los módulos junto con sus dependencias. De hecho, es más usado hoy en
-dia `cpanminus`, que también actúa como cliente de CPAN, pero que
+día `cpanminus`, que también actúa como cliente de CPAN, pero que
 tiene menos opciones de instalación; de hecho ninguna. Como ya estamos
 trabajando con `perlbrew`, lo instalamos con
 
@@ -397,7 +397,7 @@ primer programa (incluyendo el *shebang*, `#!"), este programa que
 descarga una web, la de
 [tráfico de la agencia Europa Press](http://www.europapress.es/trafico/)
 y extrae todas las incidencias referidas a la provincia de Granada,
-ocupa un total de siete líneas, bueno, 18 si las extendemso para ser
+ocupa un total de siete líneas, bueno, 18 si las extendemos para ser
 más legibles. Por supuesto, esas 7 líneas resumen lo mejor y lo peor
 del Perl, así que iremos por partes en las mismas.
 
@@ -597,7 +597,7 @@ requires 'JSON';
 {% endhighlight %}
 
 `cpanfile` es simplemente un formato de fichero que especifica los
-módulos que se necesitan y, opcionalmene, la versión de los
+módulos que se necesitan y, opcionales, la versión de los
 mismos. Por ejemplo, `requires 'Mojo::DOM', ">= 5.7";` instalará
 Mojo::DOM en esa versión si la que hay instalada es anterior. En
 nuestro caso nos da igual la versión, porque usamos el interfaz más
@@ -640,7 +640,7 @@ que haremos a continuación.
 
 [Dancer2](http://perldancer.org/) es, como Mojolicious, un marco de
 aplicaciones. Podíamos haber usado Mojolicious y nos habríamos quedado
-tan agusto, pero Dancer es más ligero y no requiere más que poner lo
+tan a gusto, pero Dancer es más ligero y no requiere más que poner lo
 que uno necesita para crear una aplicación REST, que es lo que vamos a
 hacer: una aplicación que te devuelva, en formato JSON, las
 incidencias de un sitio determinado a partir del nombre de la
@@ -733,7 +733,7 @@ para recuperar el valor correspondiente, definido en el fichero.
 	curl http://0.0.0.0:3000/trafico/GRANADA
 	[["18/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"],["17/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"]]%
 
->salen letras raras por conversión de conjunto doe caracteres, no hay
+>salen letras raras por conversión de conjunto de caracteres, no hay
 >que preocuparse por lo pronto
 
 Pero ¿qué ocurre si no hay ninguna incidencia para esa ciudad? Se
