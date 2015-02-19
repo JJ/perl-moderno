@@ -283,7 +283,7 @@ se pueden descargar, criticar, informar de errores o incluso hacer
 reseñas. Sin embargo, la verdadera utilidad de CPAN está en el cliente
 `cpan`, un programa que se instala con Perl y que descarga e instala
 los módulos junto con sus dependencias. De hecho, es más usado hoy en
-dia `cpanminus`, que también actúa como cliente de CPAN, pero que
+día `cpanminus`, que también actúa como cliente de CPAN, pero que
 tiene menos opciones de instalación; de hecho ninguna. Como ya estamos
 trabajando con `perlbrew`, lo instalamos con
 
@@ -397,7 +397,7 @@ primer programa (incluyendo el *shebang*, `#!"), este programa que
 descarga una web, la de
 [tráfico de la agencia Europa Press](http://www.europapress.es/trafico/)
 y extrae todas las incidencias referidas a la provincia de Granada,
-ocupa un total de siete líneas, bueno, 18 si las extendemso para ser
+ocupa un total de siete líneas, bueno, 18 si las extendemos para ser
 más legibles. Por supuesto, esas 7 líneas resumen lo mejor y lo peor
 del Perl, así que iremos por partes en las mismas.
 
@@ -432,7 +432,11 @@ declaración
 es de un objeto: se crea un `new` objeto de tipo `Mojo::DOM` a partir
 de una cadena, la que devuelve `get $url`. En una sola línea
 descargamos el URL y lo analizamos, creando una variable, `$dom` que
-lo contiene ya dividido en diferentes bloques que se pueden analizar.
+lo contiene ya dividido en diferentes bloques que se pueden
+analizar. La flecha se usa para acceder a métodos de una clase, porque
+Perl *también* es orientado a objetos.
+
+>O algo por el estilo.
 
 Las variables en Perl no tienen tipo, o mejor dicho, tienen
 tipificación dinámica: usa
@@ -446,8 +450,332 @@ contexto de otras cadenas, pero como un número en contexto numérico.
 	say length($uno);
 	say $uno + $dos;
 
-En el caso anterior, `length`
+En el caso anterior, `length` trata la variable como una cadena,
+considerando sus cuatro caracteres; sin embargo, `+` lo tratará como
+un número, devolviendo `3`. *Duck typing*: si actúa como un número,
+será un número.
 
+Pero hasta ahora estamos trabajando con estructuras *simples*,
+escalares. Todos los escalares tienen un `$` delante en Perl. Por lo
+tanto, la siguiente línea también declara el ámbito de un escalar:
 
+	my $estados_granada = $dom->find("table#tblTrafico tr")->grep(qr/Granada/i);
+
+lo que es, efectivamente, lo más simple que se puede decir sobre
+ella. En realidad se trata de una referencia a un *array*; los arrays
+o vectores usan `@` en Perl, pero en este caso la función a la derecha
+directamente devuelve una referencia, así que no aparecerá la arroba
+hasta más adelante.
+
+¿Y qué hace esa función? Perl sigue el principio de la mínima
+sorpresa, así que podemos intentar leerla aunque no lo conozcamos (y
+sepamos otras cosas, claro, como CSS y utilidades básicas de Unix). Lo
+que hace es que, dentro del fichero analizado, busca (`find`) las
+filas de las tablas que tengan el id `tblTrafico` y, entre ellas,
+selecciona (`grep`) aquellas en las que aparece la expresión regular
+(`qr`) Granada. Perl es expresivo y permite hacer todo eso en una sola
+línea. Además, hemos usado expresiones regulares: en este caso es una
+expresión regular `qr/Granada/i` que se suele expresar entre
+delimitadores tal como el slash y que, tras ellos, tiene una serie de
+modificadores: `i` que es *case **i**nsensitive*, por lo que buscará
+el nombre de nuestra provincia esté en mayúsculas o no.
+
+Las expresiones regulares son una de la aportación de Perl a los
+lenguajes de programación modernos. Fue el primer lenguaje que las
+introdujo de forma nativa
+
+>lenguaje de propósito general, claro; antes estaba el AWK
+
+y de ahí su sintaxis se ha extendido al resto de los lenguajes de
+programación; que ya lo incluyen de forma más o menos habitual. Aquí
+las usamos en su forma más simple, una simple cadena, pero se puede
+incluir cualquier tipo de estructura regular; por ejemplo `/\(.+\)/`
+incluiría todos los lugares que incluyeran un paréntesis, que podrían
+ser todos los que no fueran estrictamente la capital de la provincia,
+como La Zubia (Granada). Las `\` hacen que el paréntesis se interprete
+de forma literal, y `.+` indica uno o más caracteres, cualquiera que
+sea (espacio, letras, números, lo que sea).
+
+>Las expresiones regulares necesitarían cursos enteros para ser bien
+>comprendidas. Pero quedémonos con que son muy útiles y, a este nivel,
+>fáciles de usar.
+
+El array lo usamos a continuación en el bucle, cuya primera línea es:
+
+	for my $estado (@$estados_granada ) {
+
+En este caso estamos des-referenciando el *array*. Para desreferenciar
+se precede la variable con el *sigilo* que indica el tipo de destino,
+en este caso un *array* representado por `@`. En el bucle se declara
+una variable, `$estado`, que irá recorriendo uno por uno los elementos
+del *array*. Ese bucle puede usar también la forma habitual, con un
+índice sobre el *array*, pero esta forma es más *moderna* y se
+prefiere.
+
+Pero recuerda que en Perl siempre hay muchas formas de hacerlo. Por
+ejemplo
+
+	while (@$estados_granada) {
+		my $estado = shift @$estados_granada
+
+iría sacando elementos del *array* hasta que no quedaran más. Es
+cuestión de probar diferentes opciones a ver cuál puede ser más
+rápida.
+
+>Perl tiene un excelente profiler, `Devel::NYTProf`, desarrollado
+>originalmente en el New York Times. Ante la duda, usa el profiler.
+
+Dentro del bucle volvemos a usar las funciones de `Mojo::DOM` para
+extraer información de cada una de las filas de la tabla: el sitio
+donde están y el título de las imágenes de la segunda fila que es
+donde se contiene la información sobre el estado. Una vez más, en
+
+	$estado->find("td img")->map(attr =>'alt')->join(" | " )
+
+usamos bucles implícitos y también *hashes*, el otro tipo de arrays de
+Perl. `attr =>'alt'` es un hash que tiene como clave `attr` y como
+valor `alt`. Visto de izquierda a derecha, encuentra todas las
+imágenes contenidas en las celdas de la fila, de las que extrae el
+atributo `alt` y una vez extraídos todos los una usando una cadena.
+
+¿Cuál será el resultado? Variará con el día, pero en este momento algo
+así:
+
+	-> GRANADA - Obra | Circulación lenta con paradas esporádicas
+	-> SIERRA NEVADA - Retención | Circulación lenta con paradas esporádicas
+	-> GRANADA - Obra | Circulación lenta con paradas esporádicas
+	-> TREVELEZ - Retención | Circulación lenta con paradas esporádicas
+	-> PUEBLA DE DON FADRIQUE - Retención | Circulación lenta con paradas esporádicas
+	-> JUVILES - Retención | Circulación lenta con paradas esporádicas
+	-> CALAHORRA (LA) - Retención | Circulación lenta con paradas esporádicas
+	-> ZUBIA (LA) - Obra | Circulación lenta con paradas esporádicas
+	-> IZBOR - Retención | Circulación lenta con paradas esporádicas
+	-> PINOS - Obra | Circulación lenta con paradas esporádicas
+	-> GUADAHORTUNA - Obra | Circulación lenta con paradas esporádicas
+
+## Usando formatos estándar.
+
+Pero con el texto no llegamos a ningún lado. Habrá que usar algún
+formato estándar para que se pueda tratar de forma eficiente. Usemos,
+por ejemplo, JSON para sacarlo en el siguiente programa
+
+{% highlight perl %}
+use Modern::Perl;
+use autodie;
+
+use LWP::Simple;
+use Mojo::DOM;
+use JSON;
+
+my $url = "http://www.europapress.es/trafico/";
+
+my $dom = Mojo::DOM->new( get $url );
+
+my $estados_granada = $dom->find("table#tblTrafico tr")->grep(qr/Granada/i);
+
+my %estados;
+for my $estado (@$estados_granada ) {
+    push @{$estados{$estado->at("td.lugar")->text}}
+    , [$estado->at("td.fecha_tr")->text
+       , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string];
+}
+say encode_json \%estados;
+{% endhighlight %}
+
+El programa tiene pequeños cambios con respecto al anterior. Pero
+añade otro módulo, `JSON`, que habría que instalar a mano. Cada vez
+que descarguemos [el programa](code/trafico-gr-ep-json.pl) en un nuevo
+ordenador, tendremos que instalar uno a uno todos los módulos.
+
+Para ello, `cpanfile` al rescate:
+
+{% highlight perl %}
+requires 'Modern::Perl';
+requires 'LWP::Simple';
+requires 'Mojo::DOM';
+requires 'JSON';
+{% endhighlight %}
+
+`cpanfile` es simplemente un formato de fichero que especifica los
+módulos que se necesitan y, opcionales, la versión de los
+mismos. Por ejemplo, `requires 'Mojo::DOM', ">= 5.7";` instalará
+Mojo::DOM en esa versión si la que hay instalada es anterior. En
+nuestro caso nos da igual la versión, porque usamos el interfaz más
+común (al menos que sepamos), así que con ese fichero y ejecutando
+
+	cpanm --installdeps .
+
+nos instalará todos los módulos que necesitamos para ejecutar el
+programa. Que es muy similar al anterior, salvo que declaramos el hash
+`%estados` que usaremos para almacenar todos los datos relativos a una
+ciudad. El nombre de la ciudad será la clave, y como valor tendremos
+un *array* con todas las incidencias; cada una de las incidencias
+tendrá la fecha y de qué se trata. Para extraer el lugar se usa el
+mismo código que antes, pero
+
+	 [$estado->at("td.fecha_tr")->text
+       , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string]
+
+es un array de dos componentes. El primero es el texto de la fecha,
+que lo extraemos tal cual de la celda de la tabla correspondiente. El
+segundo componente es similar al que usábamos antes: extraemos el
+texto de las imágenes, pero añadiendo al final `to_string` lo
+convertimos a una cadena, lo que era necesario porque previamente se
+trataba de un objeto raruno cuyo tipo no viene al caso.
+
+Finalmente, lo escribimos en JSON, directamente a salida estándar (a
+pantalla):
+
+	say encode_json \%estados;
+
+Como `encode_json` necesita una referencia, la creamos a partir del
+hash usando `\`. El resultado será:
+
+	{"GRANADA":[["18/02/2015","Obra | Circulación lenta con paradas esporádicas"],["17/02/2015","Obra | Circulación lenta con paradas esporádicas"]],"PINOS":[["05/08/2013","Obra | Circulación lenta con paradas esporádicas"]],"CALAHORRA (LA)":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"IZBOR":[["07/11/2014","Retención | Circulación lenta con paradas esporádicas"]],"ZUBIA (LA)":[["30/01/2015","Obra | Circulación lenta con paradas esporádicas"]],"SIERRA NEVADA":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"TREVELEZ":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"GUADAHORTUNA":[["13/04/2009","Obra | Circulación lenta con paradas esporádicas"]],"JUVILES":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]],"PUEBLA DE DON FADRIQUE":[["17/02/2015","Retención | Circulación lenta con paradas esporádicas"]]}
+
+Ya estamos listos para crea una aplicación web con este formato. Lo
+que haremos a continuación.
+
+## Uso de marcos web: Dancer
+
+[Dancer2](http://perldancer.org/) es, como Mojolicious, un marco de
+aplicaciones. Podíamos haber usado Mojolicious y nos habríamos quedado
+tan a gusto, pero Dancer es más ligero y no requiere más que poner lo
+que uno necesita para crear una aplicación REST, que es lo que vamos a
+hacer: una aplicación que te devuelva, en formato JSON, las
+incidencias de un sitio determinado a partir del nombre de la
+ciudad. Lo hacemos en el [siguiente programa](code/trafico-gr-ep-dance.pl)
+
+{% highlight perl %}
+use File::Slurp::Tiny qw(read_file);
+use Dancer2 qw(:syntax);
+
+my $data_file = read_file('gr-trafico.json');
+
+my $data = from_json $data_file;
+
+get '/' => sub {
+    my @keys = keys %$data;
+    return to_json { ciudades => \@keys };
+};
+
+get '/trafico/:ciudad' => sub {
+    if ( $data->{params->{'ciudad'}} ) {
+	return to_json $data->{params->{'ciudad'}};
+    } else {
+	return 	status 404;
+    }
+};
+ 
+start;
+{% endhighlight %}
+
+(Quitamos las líneas iniciales). En una docena de líneas creamos una
+aplicación web completa. Usamos dos módulos: uno para leer ficheros
+que lo hace de forma más rápida a la habitual, *tragándoselos*
+(`Slurp`) y que nos simplifica el proceso de leer el fichero JSON, y
+`Dancer2`, el marco de aplicaciones que aquí usamos en su forma más
+simple; sin plantillas, sino simplemente definiendo una serie de
+*rutas* que se podrán usar desde una aplicación web en *jQuery*, por
+ejemplo, o desde un cliente de cualquier tipo.
+
+Tras leer el fichero y convertirlo a una estructura de datos interna,
+
+>lo más habitual sería que esto se hiciera desde una base de datos
+>como Redis, CouchDB o MongoDB, pero en este caso lo vamos a dejar en
+>el fichero. Perl, como es natural, trabaja con cualquiera de ellas.
+
+definimos las rutas. Ojo, que es una definición, no una orden que se
+ejecute directamente. Por eso lo que se le pasa es una *función
+anónima*,
+
+	'/' => sub {
+      my @keys = keys %$data;
+      return to_json { ciudades => \@keys };
+	};
+
+es un hash, con clave `/` y valor una función a la que se llamará
+cuando desde el cliente se requiera esa ruta. `sub` es la palabra
+clave que se usa para definir funciones en Perl, y normalmente lleva
+un nombre de función detrás (y últimamente también, los parámetros),
+pero en este caso no lleva nada, sino que *devuelve* un valor, en este
+caso un hash con clave `ciudades` y valor un *array* con los nombres
+posibles de las ciudades, convertido a JSON usando una función del
+propio Dancer2, `to_json`.
+
+El resultado será algo así:
+
+	curl http://0.0.0.0:3000
+	{"ciudades":10}
+
+Dancer, por defecto, ejecuta un servidor web en el puerto 3000; a este
+podemos acceder usando `curl` o desde el navegador (o desde un
+programa, claro). Es una ruta `get`, uno de las diversas órdenes que
+tiene HTTP. POST, PUT, el resto, se pueden definir de la misma forma
+*natural*, pero en nuestro caso usaremos sólo get. 
+
+La otra ruta usa un parámetro y permite acceder a los datos de la
+ciudad.
+
+	get '/trafico/:ciudad' => sub {
+		if ( $data->{params->{'ciudad'}} ) {
+		return to_json $data->{params->{'ciudad'}};
+		} else {
+			return status 404;
+		}
+	};
+
+El parámetro se le pasa con `:` y con lo mismo se le asigna un
+nombre. En realidad el funcionamiento interno es el mismo, salvo que
+recuperamos el valor del parámetro con `params` y lo usamos como clave
+para recuperar el valor correspondiente, definido en el fichero.
+
+	curl http://0.0.0.0:3000/trafico/GRANADA
+	[["18/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"],["17/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"]]%
+
+>salen letras raras por conversión de conjunto de caracteres, no hay
+>que preocuparse por lo pronto
+
+Pero ¿qué ocurre si no hay ninguna incidencia para esa ciudad? Se
+devuelve un estado 404, es decir, no encontrado, con `return status
+404;`. La última línea del fichero, `start`, es la que efectivamente
+arranca el servidor, escribiendo algo así:
+
+	>> Dancer2 v0.158000 server 13032 listening on http://0.0.0.0:3000
+
+Este programa lo puedes desplegar en un servidor propio o en un
+[PaaS tal como OpenShift](https://github.com/openshift-quickstart/dancer-example),
+de forma totalmente gratuita (para un uso moderado de
+recursos). También se puede desplegar en
+[heroku con algo más de complicación](http://stackoverflow.com/questions/23208153/dancer-app-on-heroku-failing-to-deploy-because-cpanm-installation)
+o, previo pago, en
+[dotCloud](https://docs.dotcloud.com/services/perl/). También puedes
+usar nubes privadas como el propio OpenShift o
+[Stackato](http://www.activestate.com/stackato2?utm_expid=38623772-5.6s96DopbSuSFejrYBARncw.1&utm_referrer=http%3A%2F%2Fwww.tomsitpro.com%2Farticles%2Fopen-source-cloud-computing-software%2C2-754-6.html),
+creado por la misma compañía que porta Perl a Windows.
+
+En resumen y en pocas líneas de código se puede crear una aplicación
+útil y rápida, que libere al programador para hacer otras cosas más
+interesantes como ver una temporada completa de Breaking Bad.
+
+## A donde ir desde aquí
+
+Perl tiene una comunidad extensa y entusiasta, en castellano o en
+cualquier otro idioma. En Granada el
+[Grupo de usuarios de Perl](https://groups.google.com/forum/#!members/gup-ugr)
+tiene básicamente una lista de correo, pero también organiza saraos
+importantes como la
+[Conferencia europea de Perl](http://act.yapc.eu). [Madrid](http://madrid.pm.org/) y
+[Barcelona](http://barcelona.pm) tienen un grupo bastante activo de
+usuarios y organizan reuniones periódicas (más los de Madrid que los
+de Barcelona).
+
+Para cualquier duda, el canal de IRC ,
+[Perl Monks](http://perlmonks.org) o, por supuesto, StackOverflow son
+lugares fundamentales. Difícil que una pregunta se quede sin
+contestar. Aparte del Modern Perl mencionado, hay todo tipo de libros
+a todos los niveles, desde uso de expresiones regulares hasta libros
+de hacks o de recetas. Y, por supuesto, el autor puede echar una mano
+en lo que haga falta.
 
 
