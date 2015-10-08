@@ -12,17 +12,17 @@
 
 Nuestro primer programa en Perl es el siguiente:
 
-{% highlight perl %}
+```
 #!/usr/bin/env perl
 
-use Modern::Perl '2014';
+use Modern::Perl '2015';
 use autodie;
 
 say "Hola k ase";
 
-{% endhighlight %}
+```
 
-Se ve desde el principio que es moderno: pone `Modern::Perl`. Así que vayamos por partes a ver qué hace de este Perl moderno (y de otro antiguo, o viceversa).
+Se ve desde el principio que es moderno: pone [Modern::Perl](http://search.cpan.org/~chromatic/Modern-Perl-1.20150127/lib/Modern/Perl.pm). Así que vayamos por partes a ver qué hace de este Perl moderno (y de otro antiguo, o viceversa).
 
 ## Primero: ¿por qué Perl?
 
@@ -49,7 +49,7 @@ anterior:
 
 	#!/usr/bin/env perl
 
-que es la clásica de los lenguajes interpretados y que carga el primer
+que es la clásica de los lenguajes interpretados (comenzando por [Shebang](https://es.wikipedia.org/wiki/Shebang)) y que carga el primer
 intérprete de Perl en el camino de ejecución y, a continuación, usando
 ese intérprete, lee el resto del fichero y lo ejecuta usándolo. El
 poner esto en vez de directamente el camino a *un* intérprete nos
@@ -135,7 +135,8 @@ estable, con
 tras listar las disponibles con
 
 
-	perlbrew available
+	perlbrew available  
+	  
 	  perl-5.20.2
 	i perl-5.18.4
 	  perl-5.16.3
@@ -159,7 +160,8 @@ La orden anterior no lista las versiones de desarrollo (las
 impares). Para verlas hay que usar
 
 
-	 perlbrew available --all
+	 perlbrew available --all  
+	   
 	  perl-5.6.0
 	  perl-5.6.1-TRIAL1
 	  perl-5.6.1-TRIAL2
@@ -308,12 +310,12 @@ captura). Con esto ya podemos ejecutar nuestro programa:
 
 Pero volvamos a mirarlo:
 
-{% highlight perl %}
+```
 use Modern::Perl '2014';
 use autodie;
 
 say "Hola k ase";
-{% endhighlight %}
+```
 
 El módulo `Modern::Perl` tiene `::` en medio para separar sus dos
 partes; este símbolo se usa para crear *espacios de nombres*, es
@@ -374,7 +376,7 @@ tratar la información modernas que son mucho más Perleras, como
 hacemos en el siguiente [programa](code/trafico-gr-ep.pl):
 
 
-{% highlight perl %}
+```
 use LWP::Simple;
 use Mojo::DOM;
 
@@ -389,8 +391,7 @@ for my $estado (@$estados_granada ) {
     , $estado->at("td.lugar")->text
     , " - ".$estado->find("td img")->map(attr =>'alt')->join(" | " );
 }
-
-{% endhighlight %}
+```
 
 Hemos suprimido las 5 primeras líneas, que son iguales que en el
 primer programa (incluyendo el *shebang*, `#!"), este programa que
@@ -559,7 +560,7 @@ Pero con el texto no llegamos a ningún lado. Habrá que usar algún
 formato estándar para que se pueda tratar de forma eficiente. Usemos,
 por ejemplo, JSON para sacarlo en el siguiente programa
 
-{% highlight perl %}
+```
 use Modern::Perl;
 use autodie;
 
@@ -580,7 +581,8 @@ for my $estado (@$estados_granada ) {
        , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string];
 }
 say encode_json \%estados;
-{% endhighlight %}
+{
+```
 
 El programa tiene pequeños cambios con respecto al anterior. Pero
 añade otro módulo, `JSON`, que habría que instalar a mano. Cada vez
@@ -589,12 +591,12 @@ ordenador, tendremos que instalar uno a uno todos los módulos.
 
 Para ello, `cpanfile` al rescate:
 
-{% highlight perl %}
+```
 requires 'Modern::Perl';
 requires 'LWP::Simple';
 requires 'Mojo::DOM';
 requires 'JSON';
-{% endhighlight %}
+```
 
 `cpanfile` es simplemente un formato de fichero que especifica los
 módulos que se necesitan y, opcionales, la versión de los
@@ -646,7 +648,7 @@ hacer: una aplicación que te devuelva, en formato JSON, las
 incidencias de un sitio determinado a partir del nombre de la
 ciudad. Lo hacemos en el [siguiente programa](code/trafico-gr-ep-dance.pl)
 
-{% highlight perl %}
+```
 use File::Slurp::Tiny qw(read_file);
 use Dancer2 qw(:syntax);
 
@@ -668,7 +670,7 @@ get '/trafico/:ciudad' => sub {
 };
  
 start;
-{% endhighlight %}
+```
 
 (Quitamos las líneas iniciales). En una docena de líneas creamos una
 aplicación web completa. Usamos dos módulos: uno para leer ficheros
@@ -731,7 +733,7 @@ recuperamos el valor del parámetro con `params` y lo usamos como clave
 para recuperar el valor correspondiente, definido en el fichero.
 
 	curl http://0.0.0.0:3000/trafico/GRANADA
-	[["18/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"],["17/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"]]%
+	[["18/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"],["17/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"]]
 
 >salen letras raras por conversión de conjunto de caracteres, no hay
 >que preocuparse por lo pronto
