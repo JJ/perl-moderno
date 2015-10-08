@@ -391,7 +391,6 @@ for my $estado (@$estados_granada ) {
     , $estado->at("td.lugar")->text
     , " - ".$estado->find("td img")->map(attr =>'alt')->join(" | " );
 }
-
 ```
 
 Hemos suprimido las 5 primeras líneas, que son iguales que en el
@@ -582,7 +581,8 @@ for my $estado (@$estados_granada ) {
        , $estado->find("td img")->map(attr =>'alt')->join(" | " )->to_string];
 }
 say encode_json \%estados;
-{```
+{
+```
 
 El programa tiene pequeños cambios con respecto al anterior. Pero
 añade otro módulo, `JSON`, que habría que instalar a mano. Cada vez
@@ -733,7 +733,7 @@ recuperamos el valor del parámetro con `params` y lo usamos como clave
 para recuperar el valor correspondiente, definido en el fichero.
 
 	curl http://0.0.0.0:3000/trafico/GRANADA
-	[["18/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"],["17/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"]]%
+	[["18/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"],["17/02/2015","Obra | CirculaciÃ³n lenta con paradas esporÃ¡dicas"]]
 
 >salen letras raras por conversión de conjunto de caracteres, no hay
 >que preocuparse por lo pronto
