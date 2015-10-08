@@ -49,7 +49,7 @@ anterior:
 
 	#!/usr/bin/env perl
 
-que es la clásica de los lenguajes interpretados y que carga el primer
+que es la clásica de los lenguajes interpretados (comenzando por [Shebang](https://es.wikipedia.org/wiki/Shebang)) y que carga el primer
 intérprete de Perl en el camino de ejecución y, a continuación, usando
 ese intérprete, lee el resto del fichero y lo ejecuta usándolo. El
 poner esto en vez de directamente el camino a *un* intérprete nos
