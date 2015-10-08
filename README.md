@@ -12,17 +12,17 @@
 
 Nuestro primer programa en Perl es el siguiente:
 
-{% highlight perl %}
+```
 #!/usr/bin/env perl
 
-use Modern::Perl '2014';
+use Modern::Perl '2015';
 use autodie;
 
 say "Hola k ase";
 
-{% endhighlight %}
+```
 
-Se ve desde el principio que es moderno: pone `Modern::Perl`. Así que vayamos por partes a ver qué hace de este Perl moderno (y de otro antiguo, o viceversa).
+Se ve desde el principio que es moderno: pone [Modern::Perl](http://search.cpan.org/~chromatic/Modern-Perl-1.20150127/lib/Modern/Perl.pm). Así que vayamos por partes a ver qué hace de este Perl moderno (y de otro antiguo, o viceversa).
 
 ## Primero: ¿por qué Perl?
 
